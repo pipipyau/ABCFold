@@ -94,7 +94,9 @@ def run(args, config, defaults, config_file):
     if args.alphafold3:
         from abcfold.alphafold3.check_install import check_af3_install
 
-        check_af3_install(interactive=False, sif_path=args.sif_path)
+        check_af3_install(interactive=False,
+                          sif_path=args.sif_path,
+                          container_name=args.container_name)
 
     if args.boltz:
         from abcfold.boltz.check_install import check_boltz

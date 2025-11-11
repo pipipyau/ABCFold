@@ -16,6 +16,7 @@ def run_alphafold3(
     interactive: bool = False,
     number_of_models: int = 5,
     num_recycles: int = 10,
+    container_name: str = None
 ) -> bool:
     """
     Run Alphafold3 using the input JSON file
@@ -28,6 +29,7 @@ def run_alphafold3(
         sif_path (Union[str, Path, None]): Path to a Singularity image file
         interactive (bool): If True, run the docker container in interactive mode
         number_of_models (int): Number of models to generate
+        container_name (str): Name of the container to run
 
     Returns:
         Bool: True if the Alphafold3 run was successful, False otherwise
@@ -48,6 +50,7 @@ def run_alphafold3(
         interactive=interactive,
         number_of_models=number_of_models,
         num_recycles=num_recycles,
+        container_name=container_name
     )
 
     logger.info("Running Alphafold3")
@@ -77,6 +80,7 @@ def generate_af3_cmd(
     number_of_models: int = 10,
     num_recycles: int = 5,
     interactive: bool = False,
+    container_name: str = None,
 ) -> str:
     """
     Generate the Alphafold3 command
@@ -89,6 +93,7 @@ def generate_af3_cmd(
         sif_path (Union[str, Path, None]): Path to a Singularity image file
         number_of_models (int): Number of models to generate
         interactive (bool): If True, run the docker container in interactive mode
+        container_name (str): Name of the docker container to run
 
     Returns:
         str: The Alphafold3 command
@@ -113,6 +118,17 @@ def generate_af3_cmd(
         --num_diffusion_samples {number_of_models}\
         --num_recycles {num_recycles}
     """
+
+    elif container_name is not None:
+        return f"""
+        docker exec {container_name} \
+        python run_alphafold.py \
+        --json_path=/root/af_input/{input_json.name} \
+        --model_dir=/root/models \
+        --output_dir=/root/af_output \
+        --num_diffusion_samples {number_of_models}\
+        --num_recycles {num_recycles}
+        """
 
     else:
         return f"""

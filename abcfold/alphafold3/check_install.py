@@ -12,19 +12,21 @@ AF3_VERSION = "3.0.0"
 
 
 def check_af3_install(interactive: bool = True,
-                      sif_path: Union[str, Path, None] = None) -> None:
+                      sif_path: Union[str, Path, None] = None,
+                      container_name: str = None) -> None:
     """
     Check if Alphafold3 is installed by running the help command
 
     Args:
         interactive (bool): If True, run the docker container in interactive mode
+        container_name (str): Name of the container to run
 
     Raises:
         subprocess.CalledProcessError: If the Alphafold3 help command returns an error
 
     """
     logger.debug("Checking if Alphafold3 is installed")
-    cmd = generate_test_command(interactive, sif_path)
+    cmd = generate_test_command(interactive, sif_path, container_name)
     with subprocess.Popen(
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     ) as p:
@@ -53,12 +55,14 @@ https://github.com/google-deepmind/alphafold3 and follow install instructions"
 
 
 def generate_test_command(interactive: bool = True,
-                          sif_path: Union[str, Path, None] = None) -> str:
+                          sif_path: Union[str, Path, None] = None,
+                          container_name: str = None) -> str:
     """
     Generate the Alphafold3 help command
 
     Args:
         interactive (bool): If True, run the docker container in interactive mode
+        container_name (str): Name of the container to run
 
     Returns:
         str: The Alphafold3 help command
@@ -69,14 +73,23 @@ def generate_test_command(interactive: bool = True,
     {sif_path} \
     python /app/alphafold/run_alphafold.py \
     --help
-"""
+    """
+
+    elif container_name:
+        return f"""
+    docker exec {container_name} \
+    alphafold3 \
+    python run_alphafold.py \
+    --help
+    """
+
     else:
         return f"""
     docker run {'-it' if interactive else ''} \
     alphafold3 \
     python run_alphafold.py \
     --help
-"""
+    """
 
 
 def generate_version_command(sif_path: Union[str, Path, None] = None) -> str:
