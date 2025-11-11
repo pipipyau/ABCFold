@@ -44,7 +44,7 @@ def run(args, config, defaults, config_file):
 
     Args:
         args (argparse.Namespace): Arguments from the command line
-        config (configparser.SafeConfigParser): Config parser object
+        config (configparser.ConfigParser): Config parser object
         defaults (dict): Default values from the config file
         config_file (Path): Path to the config file
 
@@ -421,7 +421,7 @@ def main():
 
     defaults = {}
     config_file = Path(__file__).parent.joinpath("data", "config.ini")
-    config = configparser.SafeConfigParser()
+    config = configparser.ConfigParser()
 
     if config_file.exists():
         config.read(str(config_file))

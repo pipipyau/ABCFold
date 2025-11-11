@@ -17,3 +17,6 @@ build/
 # pip packages
 dist/
 *.egg-info/
+
+# virtual environment
+venv

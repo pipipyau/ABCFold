@@ -27,7 +27,7 @@ database_dir = None
         )
 
         defaults = {}
-        config = configparser.SafeConfigParser()
+        config = configparser.ConfigParser()
 
         if config_file_path.exists():
             config.read(str(config_file_path))
