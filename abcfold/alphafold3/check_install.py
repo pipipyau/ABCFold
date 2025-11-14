@@ -41,7 +41,7 @@ https://github.com/google-deepmind/alphafold3 and follow install instructions"
             raise subprocess.CalledProcessError(p.returncode, cmd, stderr)
     logger.info("Alphafold3 is installed")
 
-    cmd = generate_version_command(sif_path)
+    cmd = generate_version_command(sif_path, container_name)
     with subprocess.Popen(
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     ) as p:
@@ -84,7 +84,6 @@ def generate_test_command(interactive: bool = True,
     elif container_name:
         return f"""
     docker exec {container_name} \
-    alphafold3 \
     python run_alphafold.py \
     --help
     """
@@ -98,7 +97,8 @@ def generate_test_command(interactive: bool = True,
     """
 
 
-def generate_version_command(sif_path: Union[str, Path, None] = None) -> str:
+def generate_version_command(sif_path: Union[str, Path, None] = None,
+                             container_name: str = None) -> str:
     """
     Generate the Alphafold3 version command
     """
@@ -109,6 +109,20 @@ def generate_version_command(sif_path: Union[str, Path, None] = None) -> str:
     python -c \
     'from alphafold3.version import __version__ ; print(__version__)'
 """
+    elif container_name == "no":
+        return """
+    python -c \
+    'from alphafold3.version import __version__ ; print(__version__)'
+    """
+
+    elif container_name:
+        return f"""
+    docker exec {container_name} \
+    python -c \
+    'from alphafold3.version import __version__ ; print(__version__)'
+    --help
+    """
+
     else:
         return """
     docker run \
