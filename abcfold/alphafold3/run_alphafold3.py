@@ -120,6 +120,16 @@ def generate_af3_cmd(
     """
 
     elif container_name is not None:
+        if container_name == "no":
+            return f"""
+            python run_alphafold.py \
+            --json_path=/root/af_input/{input_json.name} \
+            --model_dir=/root/models \
+            --output_dir=/root/af_output \
+            --num_diffusion_samples {number_of_models}\
+            --num_recycles {num_recycles}
+            """
+
         return f"""
         docker exec {container_name} \
         python run_alphafold.py \

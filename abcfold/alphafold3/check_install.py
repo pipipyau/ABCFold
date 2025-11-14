@@ -75,6 +75,12 @@ def generate_test_command(interactive: bool = True,
     --help
     """
 
+    elif container_name == "no":
+        return """
+    python run_alphafold.py \
+    --help
+    """
+
     elif container_name:
         return f"""
     docker exec {container_name} \

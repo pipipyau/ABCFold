@@ -36,6 +36,11 @@ def main_argpase_util(parser):
         help="[optional] Specify the path of the output ABCFold json file, this \
 can be used to run subsequent runs of ABCFold with the same input features (e.g. MSA)",
     )
+    parser.add_argument(
+        '--container-name',
+        type=str,
+        default=None,
+        help='Name of the container')
 
     return parser
 
